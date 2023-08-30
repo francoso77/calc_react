@@ -1,4 +1,4 @@
-import { Box, Grid, Button, TextField, Container } from '@mui/material';
+import { Grid, Button, TextField, Container, Paper } from '@mui/material';
 import { CalculadoraCls } from '../Utils/CalculadoraCls';
 
 const teclado: string[] = [
@@ -18,45 +18,38 @@ export default function Home() {
 
   return (
     <>
-      <Container
-        maxWidth="sm"
-        sx={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          border: 2,
-          padding: 5,
-          borderRadius: 2,
-        }}
-      >
-        <TextField
-          sx={{
-            width: '100%',
-            marginBottom: 3,
-          }}
-          id="txtVisor"
-          name="txtVisor"
-          variant="outlined"
-          disabled
-        />
-        <Box sx={{ flexGrow: 1 }}>
-          <Grid container spacing={{ xs: 1, md: 1 }} columns={{ xs: 12, sm: 12, md: 12 }}>
+      <Container maxWidth="xs">
+        <Paper elevation={6} sx={{ padding: 2, marginTop: 2, }}>
+
+          <Grid container spacing={{ xs: 1.2 }}>
+            <Grid item xs={12}>
+              <TextField
+                sx={{
+                  textAlign: 'left',
+                }}
+                id="txtVisor"
+                name="txtVisor"
+                variant="outlined"
+                fullWidth
+                disabled
+              />
+            </Grid>
             {teclado.map((tecla, index) => (
-              <Grid item xs={3} sm={3} md={3} key={index}>
+              <Grid item xs={3} key={index}>
                 <Button
                   sx={{
-                    height: '100%',
-                    width: '100%',
                     background: '#49c4ff',
                     color: '#000077',
                   }}
                   onClick={() => passaValor(tecla)}
+                  fullWidth
                 >
                   {tecla}
                 </Button>
               </Grid>
             ))}
           </Grid>
-        </Box>
+        </Paper>
       </Container>
     </>
   );

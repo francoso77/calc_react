@@ -3,6 +3,8 @@ const operadores: Array<string> = ['/', '*', '+', '-', 'C', '←', '=', '√', '
 var operador: string = ''
 var txtVisor: string = '0'
 var temVirgula: boolean = false
+var temOperadorEspecial: boolean = false
+var temResultado: boolean = false
 
 export class CalculadoraCls {
     /**
@@ -11,39 +13,37 @@ export class CalculadoraCls {
      */
     public enviaValor(bt: string): void {
 
-        if (bt == ',') {
+        if (bt === ',') {
             temVirgula = true
         }
         if (!operadores.includes(bt)) {
-            if (txtVisor == '0') {
+            if (txtVisor === '0') {
                 txtVisor = bt
             }
-            else {
-                // if (txtVisor == '0') {
-                //     txtVisor = bt
-                // } else if (bt == '0') {
-                //     txtVisor = txtVisor.concat(bt)
-                // } else {
+            else if (temOperadorEspecial || temResultado) {
+                primeiroValor = parseFloat(txtVisor)
+                txtVisor = bt
+                temOperadorEspecial = false
+                temResultado = false
+            } else {
 
-                // }
                 txtVisor = txtVisor.concat(bt)
             }
-            formatar(bt)
         }
         else {
             limpaValor()
-            if (bt == '←') {
-                if (txtVisor.length == 1) {
+            if (bt === '←') {
+                if (txtVisor.length === 1) {
                     txtVisor = '0'
                 } else {
                     txtVisor = txtVisor.substring(0, txtVisor.length - 1)
-                    if (txtVisor.length == 0) txtVisor = '0'
+                    if (txtVisor.length === 0) txtVisor = '0'
                 }
             }
-            else if (bt == 'C') {
+            else if (bt === 'C') {
                 txtVisor = '0'
             }
-            else if (bt == '=') {
+            else if (bt === '=') {
                 if (!primeiroValor) {
                     txtVisor = '0'
                 } else {
@@ -52,38 +52,45 @@ export class CalculadoraCls {
                     primeiroValor = 0
                 }
             }
-            else if (bt == '+') {
+            else if (bt === '+') {
                 primeiroValor = parseFloat(txtVisor)
                 operador = '+'
                 txtVisor = '0'
             }
-            else if (bt == '-') {
+            else if (bt === '-') {
                 primeiroValor = parseFloat(txtVisor)
                 operador = '-'
                 txtVisor = '0'
             }
-            else if (bt == '/') {
+            else if (bt === '/') {
                 primeiroValor = parseFloat(txtVisor)
                 operador = '/'
                 txtVisor = '0'
             }
-            else if (bt == '*') {
+            else if (bt === '*') {
                 primeiroValor = parseFloat(txtVisor)
                 operador = '*'
                 txtVisor = '0'
-            } else if (bt == '√') {
+            } else if (bt === '√') {
                 if (txtVisor != '0') {
                     primeiroValor = parseFloat(txtVisor)
-                    txtVisor = Math.sqrt(primeiroValor).toString()
+                    txtVisor = Math.sqrt(primeiroValor).toLocaleString('pt-br')
+                    temOperadorEspecial = true
                 }
-            } else if (bt == 'x²') {
+            } else if (bt === 'x²') {
                 if (txtVisor != '0') {
                     primeiroValor = parseFloat(txtVisor)
-                    txtVisor = (primeiroValor ** 2).toString()
+                    txtVisor = (primeiroValor ** 2).toLocaleString('pt-br')
+                    temOperadorEspecial = true
                 }
             }
-            formatar(bt)
         }
+        formatar(bt)
+
+        console.log('txtvisor: ', txtVisor)
+        console.log('operador: ', operador)
+        console.log('tecla: ', bt)
+        console.log('primeiro valor: ', primeiroValor)
     }
 }
 
@@ -96,19 +103,20 @@ export class CalculadoraCls {
 function calcular(vr1: number, vr2: number, op: string): void {
 
     let resultado: number = 0
-    if (op == '+') {
+    if (op === '+') {
         resultado = vr1 + vr2
-    } else if (op == '-') {
+    } else if (op === '-') {
         resultado = vr1 - vr2
-    } else if (op == '/') {
+    } else if (op === '/') {
         if (vr1 == 0 || vr2 == 0) {
             resultado = 0
         } else {
             resultado = vr1 / vr2
         }
-    } else if (op == '*') {
+    } else if (op === '*') {
         resultado = vr1 * vr2
     }
+    temResultado = true
     operador = ''
     txtVisor = resultado.toLocaleString('pt-br')
     formatar()
@@ -118,7 +126,7 @@ function formatar(bt?: string): void {
     const tela = document.querySelector('#txtVisor') as HTMLInputElement
 
     limpaValor()
-    if (txtVisor == '0.') {
+    if (txtVisor === '0.') {
         if (bt) txtVisor = '0,'
         if (tela) tela.value = txtVisor
 
@@ -132,7 +140,7 @@ function formatar(bt?: string): void {
             txtVisor = valor.toLocaleString('pt-br', { style: 'decimal', minimumFractionDigits: 0 }).concat(',')
             temVirgula = false
         } else {
-            if (txtVisor == '0.0') {
+            if (txtVisor === '0.0') {
                 txtVisor = '0,0'
             } else {
 
@@ -144,7 +152,7 @@ function formatar(bt?: string): void {
 }
 
 function limpaValor(): void {
-    if (txtVisor == ',') {
+    if (txtVisor === ',') {
         txtVisor = '0,'
     }
     let vrString = txtVisor
