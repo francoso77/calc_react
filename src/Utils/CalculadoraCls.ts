@@ -56,21 +56,26 @@ export class CalculadoraCls {
                 primeiroValor = parseFloat(txtVisor)
                 operador = '+'
                 txtVisor = '0'
+                temResultado = false
             }
             else if (bt === '-') {
                 primeiroValor = parseFloat(txtVisor)
                 operador = '-'
                 txtVisor = '0'
+                temResultado = false
             }
             else if (bt === '/') {
                 primeiroValor = parseFloat(txtVisor)
                 operador = '/'
                 txtVisor = '0'
+                temResultado = false
             }
             else if (bt === '*') {
                 primeiroValor = parseFloat(txtVisor)
                 operador = '*'
                 txtVisor = '0'
+                temResultado = false
+
             } else if (bt === '√') {
                 if (txtVisor != '0') {
                     primeiroValor = parseFloat(txtVisor)
