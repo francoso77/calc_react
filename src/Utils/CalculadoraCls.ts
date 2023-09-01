@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 var primeiroValor: number = 0
 const operadores: Array<string> = ['/', '*', '+', '-', 'C', '←', '=', '√', 'x²']
 var operador: string = ''
@@ -6,12 +8,20 @@ var temVirgula: boolean = false
 var temOperadorEspecial: boolean = false
 var temResultado: boolean = false
 
+interface DisplayInterface {
+    dados: { [key: string]: string | number | readonly string[] | undefined | any },
+    //field: string,
+    setState: React.Dispatch<React.SetStateAction<any>>,
+    bt: string,
+}
 export class CalculadoraCls {
     /**
      * Recebe o botão clicado e registra o valor no visor da calculadora
      * @param bt string: valor do botão
      */
-    public enviaValor(bt: string): void {
+
+
+    public enviaValor({ dados, setState, bt }: DisplayInterface): void {
 
         if (bt === ',') {
             temVirgula = true
@@ -128,13 +138,14 @@ function calcular(vr1: number, vr2: number, op: string): void {
 }
 
 function formatar(bt?: string): void {
+    //const [visor, setVisor] = useState('')
     const tela = document.querySelector('#txtVisor') as HTMLInputElement
 
     limpaValor()
     if (txtVisor === '0.') {
         if (bt) txtVisor = '0,'
         if (tela) tela.value = txtVisor
-
+        //setVisor('0,')
     } else {
 
         const valor: number = parseFloat(txtVisor)

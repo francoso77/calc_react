@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import { Grid, Button, TextField, Container, Paper } from '@mui/material';
 import { CalculadoraCls } from '../Utils/CalculadoraCls';
 
@@ -11,9 +12,11 @@ const teclado: string[] = [
 
 export default function Home() {
 
+  const [display, setDisplay] = useState<string>('')
+
   const passaValor = (tecla: string) => {
     var calc = new CalculadoraCls();
-    calc.enviaValor(tecla)
+    calc.enviaValor(display, setDisplay(tecla), tecla)
   }
 
   return (
@@ -28,10 +31,9 @@ export default function Home() {
                   textAlign: 'left',
                 }}
                 id="txtVisor"
-                name="txtVisor"
                 variant="outlined"
+                value={display}
                 fullWidth
-                disabled
               />
             </Grid>
             {teclado.map((tecla, index) => (
