@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { DisplayStateInterface } from '../Context/DisplayState'
 
 var primeiroValor: number = 0
 const operadores: Array<string> = ['/', '*', '+', '-', 'C', '←', '=', '√', 'x²']
@@ -8,12 +8,7 @@ var temVirgula: boolean = false
 var temOperadorEspecial: boolean = false
 var temResultado: boolean = false
 
-interface DisplayInterface {
-    dados: { [key: string]: string | number | readonly string[] | undefined | any },
-    //field: string,
-    setState: React.Dispatch<React.SetStateAction<any>>,
-    bt: string,
-}
+
 export class CalculadoraCls {
     /**
      * Recebe o botão clicado e registra o valor no visor da calculadora
@@ -21,7 +16,12 @@ export class CalculadoraCls {
      */
 
 
-    public enviaValor({ dados, setState, bt }: DisplayInterface): void {
+    public enviaValor(
+        bt: string,
+        displayState: DisplayStateInterface,
+        setDisplayState: React.Dispatch<React.SetStateAction<DisplayStateInterface>>): void {
+        
+        txtVisor = displayState.visor
 
         if (bt === ',') {
             temVirgula = true
@@ -87,25 +87,44 @@ export class CalculadoraCls {
                 temResultado = false
 
             } else if (bt === '√') {
-                if (txtVisor != '0') {
+                if (txtVisor !== '0') {
                     primeiroValor = parseFloat(txtVisor)
                     txtVisor = Math.sqrt(primeiroValor).toLocaleString('pt-br')
                     temOperadorEspecial = true
                 }
             } else if (bt === 'x²') {
-                if (txtVisor != '0') {
+                if (txtVisor !== '0') {
                     primeiroValor = parseFloat(txtVisor)
                     txtVisor = (primeiroValor ** 2).toLocaleString('pt-br')
                     temOperadorEspecial = true
                 }
             }
         }
-        formatar(bt)
+        
+        limpaValor()
 
-        console.log('txtvisor: ', txtVisor)
-        console.log('operador: ', operador)
-        console.log('tecla: ', bt)
-        console.log('primeiro valor: ', primeiroValor)
+        if (txtVisor === '0.') {
+            if (bt) txtVisor = '0,'
+            setDisplayState({visor:'0,'})
+        } else {
+    
+            const valor: number = parseFloat(txtVisor)
+    
+            if (parseInt(txtVisor) !== parseFloat(txtVisor)) {
+                txtVisor = valor.toLocaleString('pt-br', { style: 'decimal', minimumFractionDigits: 0 })
+            } else if (temVirgula && valor !== 0) {
+                txtVisor = valor.toLocaleString('pt-br', { style: 'decimal', minimumFractionDigits: 0 }).concat(',')
+                temVirgula = false
+            } else {
+                if (txtVisor === '0.0') {
+                    txtVisor = '0,0'
+                } else {
+    
+                    txtVisor = valor.toLocaleString('pt-br', { style: 'decimal', minimumFractionDigits: 0 })
+                }
+            }
+            setDisplayState({visor:txtVisor}) 
+        }
     }
 }
 
@@ -123,7 +142,7 @@ function calcular(vr1: number, vr2: number, op: string): void {
     } else if (op === '-') {
         resultado = vr1 - vr2
     } else if (op === '/') {
-        if (vr1 == 0 || vr2 == 0) {
+        if (vr1 === 0 || vr2 == 0) {
             resultado = 0
         } else {
             resultado = vr1 / vr2
@@ -134,38 +153,39 @@ function calcular(vr1: number, vr2: number, op: string): void {
     temResultado = true
     operador = ''
     txtVisor = resultado.toLocaleString('pt-br')
-    formatar()
+    // formatar()
 }
 
-function formatar(bt?: string): void {
-    //const [visor, setVisor] = useState('')
-    const tela = document.querySelector('#txtVisor') as HTMLInputElement
+// function formatar({ bt, display, setDisplay }: TeclaInterface): void {
+    
+//     // const tela = document.querySelector('#txtVisor') as HTMLInputElement
+//     const tela: string = display.visor
 
-    limpaValor()
-    if (txtVisor === '0.') {
-        if (bt) txtVisor = '0,'
-        if (tela) tela.value = txtVisor
-        //setVisor('0,')
-    } else {
+//     limpaValor()
+//     if (txtVisor === '0.') {
+//         if (bt) txtVisor = '0,'
+//         // if (tela) tela.value = txtVisor
+//         setDisplay({visor:'0,'})
+//     } else {
 
-        const valor: number = parseFloat(txtVisor)
+//         const valor: number = parseFloat(txtVisor)
 
-        if (parseInt(txtVisor) != parseFloat(txtVisor)) {
-            txtVisor = valor.toLocaleString('pt-br', { style: 'decimal', minimumFractionDigits: 0 })
-        } else if (temVirgula && valor != 0) {
-            txtVisor = valor.toLocaleString('pt-br', { style: 'decimal', minimumFractionDigits: 0 }).concat(',')
-            temVirgula = false
-        } else {
-            if (txtVisor === '0.0') {
-                txtVisor = '0,0'
-            } else {
+//         if (parseInt(txtVisor) !== parseFloat(txtVisor)) {
+//             txtVisor = valor.toLocaleString('pt-br', { style: 'decimal', minimumFractionDigits: 0 })
+//         } else if (temVirgula && valor !== 0) {
+//             txtVisor = valor.toLocaleString('pt-br', { style: 'decimal', minimumFractionDigits: 0 }).concat(',')
+//             temVirgula = false
+//         } else {
+//             if (txtVisor === '0.0') {
+//                 txtVisor = '0,0'
+//             } else {
 
-                txtVisor = valor.toLocaleString('pt-br', { style: 'decimal', minimumFractionDigits: 0 })
-            }
-        }
-        if (tela) tela.value = txtVisor
-    }
-}
+//                 txtVisor = valor.toLocaleString('pt-br', { style: 'decimal', minimumFractionDigits: 0 })
+//             }
+//         }
+//         setDisplay({visor:txtVisor}) 
+//     }
+// }
 
 function limpaValor(): void {
     if (txtVisor === ',') {

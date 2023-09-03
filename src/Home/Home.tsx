@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Grid, Button, TextField, Container, Paper } from '@mui/material';
-import { CalculadoraCls } from '../Utils/CalculadoraCls';
+import { Grid, TextField, Container, Paper } from '@mui/material';
+import { Btn } from "../Components/Button";
+import useDisplayState from "../Context/DisplayState";
+import { GlobalContext } from "../Context/GlobalContext";
 
 const teclado: string[] = [
   'x²', '√', '←', '/',
@@ -12,33 +13,43 @@ const teclado: string[] = [
 
 export default function Home() {
 
-  const [display, setDisplay] = useState<string>('')
-
-  const passaValor = (tecla: string) => {
-    var calc = new CalculadoraCls();
-    calc.enviaValor(display, setDisplay(tecla), tecla)
-  }
+  const { displayState, setDisplayState } = useDisplayState()
+  const display = displayState.visor
 
   return (
     <>
-      <Container maxWidth="xs">
-        <Paper elevation={6} sx={{ padding: 2, marginTop: 2, }}>
+      <GlobalContext.Provider value={{
+        displayState: displayState,
+        setDisplayState: setDisplayState,
+      }}>
+        <Container maxWidth="xs">
+          <Paper elevation={6} sx={{ padding: 2, marginTop: 2, }}>
 
-          <Grid container spacing={{ xs: 1.2 }}>
-            <Grid item xs={12}>
-              <TextField
-                sx={{
-                  textAlign: 'left',
-                }}
-                id="txtVisor"
-                variant="outlined"
-                value={display}
-                fullWidth
-              />
-            </Grid>
-            {teclado.map((tecla, index) => (
-              <Grid item xs={3} key={index}>
-                <Button
+            <Grid container spacing={{ xs: 1.2 }}>
+              <Grid item xs={12}>
+                <TextField
+                  id="txtVisor"
+                  variant="outlined"
+                  value={display}
+                  fullWidth
+                  sx={{
+                    fontSize: 80,
+                    color: 'green',
+                    textAlign: 'center',
+                  }}
+                />
+              </Grid>
+              {teclado.map((tecla, index) => (
+                <Grid item xs={3} key={index}>
+
+                  <Btn
+                    bgColor='#49c4ff'
+                    hoverColor='#000077'
+                    value={tecla}
+                  />
+       
+
+                  {/* <Button
                   sx={{
                     background: '#49c4ff',
                     color: '#000077',
@@ -47,12 +58,13 @@ export default function Home() {
                   fullWidth
                 >
                   {tecla}
-                </Button>
-              </Grid>
-            ))}
-          </Grid>
-        </Paper>
-      </Container>
+                </Button> */}
+                </Grid>
+              ))}
+            </Grid>
+          </Paper>
+        </Container>
+      </GlobalContext.Provider>
     </>
   );
 }

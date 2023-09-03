@@ -6,13 +6,14 @@ interface ButtonCustomProps {
 }
 
 export const ButtonCustom = styled.button<ButtonCustomProps>`
-  width: 200px;
-  height: 50px;
+  width: 85px;
+  height: 85px;
   border-style: none;
   border-width: 0px;
   border-radius: 5px;
   color: #ffff;
   font-weight: bold;
+  font-size: 20px;
   background-color: ${(props) => props.bgColor};
 
   &:hover{
