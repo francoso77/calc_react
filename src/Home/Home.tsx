@@ -2,6 +2,7 @@ import { Grid, TextField, Container, Paper } from '@mui/material';
 import { Btn } from "../Components/Button";
 import useDisplayState from "../Context/DisplayState";
 import { GlobalContext } from "../Context/GlobalContext";
+import DisplayText from '../Components/Display';
 
 const teclado: string[] = [
   'x²', '√', '←', '/',
@@ -27,17 +28,15 @@ export default function Home() {
 
             <Grid container spacing={{ xs: 1.2 }}>
               <Grid item xs={12}>
-                <TextField
-                  id="txtVisor"
-                  variant="outlined"
-                  value={display}
-                  fullWidth
-                  sx={{
-                    fontSize: 80,
-                    color: 'green',
-                    textAlign: 'center',
-                  }}
+                <DisplayText
+                  type='text'
+                  dados={displayState}
+                  field={display}
+                  setState={setDisplayState}
+                  id={'txtVisor'}
                 />
+              </Grid>
+              <Grid item xs={12}>
               </Grid>
               {teclado.map((tecla, index) => (
                 <Grid item xs={3} key={index}>
@@ -47,7 +46,7 @@ export default function Home() {
                     hoverColor='#000077'
                     value={tecla}
                   />
-       
+
 
                   {/* <Button
                   sx={{
