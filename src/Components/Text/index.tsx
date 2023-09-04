@@ -26,6 +26,7 @@ interface ComTextInterface {
   mapKeyPress?: Array<mapKeyPressInterface>
   tipo?: 'text' | 'checkbox' | 'mask' | 'valor',
   autofocus?: boolean,
+  id?: string,
 }
 export default function Text({
   label,
@@ -43,6 +44,7 @@ export default function Text({
   tipo = 'text',
   erros = {},
   autofocus = false,
+  id = '',
 }: ComTextInterface) {
 
   const maskCEP: Mask | ((value: string) => Mask) = [/\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/]
@@ -50,6 +52,10 @@ export default function Text({
   const maskCPF: Mask | ((value: string) => Mask) = [/\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '.', /\d/, /\d/, /\d/, '-', /\d/, /\d/]
 
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const inputStyles: React.CSSProperties = {
+    textAlign: 'right',
+  };
 
   useEffect(() => {
     if (autofocus && inputRef.current) {
@@ -115,8 +121,14 @@ export default function Text({
             {label}
           </Typography>
           <OutlinedInput
-            value={dados[field]}
-            sx={{ my: 0, py: 0, height: 40 }}
+            id={id}
+            value={id === 'txtVisor' ? field : dados[field]}
+            sx={id === 'txtVisor' ? {
+              my: 0,
+              py: 5,
+              height: 40,
+              fontSize: 35,
+            } : { my: 0, py: 0, height: 40 }}
             placeholder={placeholder}
             disabled={disabled}
             type={type}
@@ -126,6 +138,7 @@ export default function Text({
             onKeyDown={(ev) => onKey(ev.key)}
             autoFocus={autofocus}
             inputRef={inputRef}
+            inputProps={{ style: inputStyles }}
           />
           <Condicional condicao={typeof erros[field] !== 'undefined'}>
             <Typography variant='caption' textAlign='left' color='warning.main' >{erros[field]}</Typography>

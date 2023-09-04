@@ -3,6 +3,7 @@ import { Btn } from "../Components/Button";
 import useDisplayState from "../Context/DisplayState";
 import { GlobalContext } from "../Context/GlobalContext";
 import DisplayText from '../Components/Display';
+import Text from '../Components/Text';
 
 const teclado: string[] = [
   'x²', '√', '←', '/',
@@ -28,7 +29,8 @@ export default function Home() {
 
             <Grid container spacing={{ xs: 1.2 }}>
               <Grid item xs={12}>
-                <DisplayText
+                <Text
+                  label=''
                   type='text'
                   dados={displayState}
                   field={display}
@@ -36,6 +38,15 @@ export default function Home() {
                   id={'txtVisor'}
                 />
               </Grid>
+              {/* <Grid item xs={12}>
+                <DisplayText
+                  type='text'
+                  dados={displayState}
+                  field={display}
+                  setState={setDisplayState}
+                  id={'txtVisor'}
+                />
+              </Grid> */}
               <Grid item xs={12}>
               </Grid>
               {teclado.map((tecla, index) => (
@@ -46,18 +57,6 @@ export default function Home() {
                     hoverColor='#000077'
                     value={tecla}
                   />
-
-
-                  {/* <Button
-                  sx={{
-                    background: '#49c4ff',
-                    color: '#000077',
-                  }}
-                  onClick={() => passaValor(tecla)}
-                  fullWidth
-                >
-                  {tecla}
-                </Button> */}
                 </Grid>
               ))}
             </Grid>
